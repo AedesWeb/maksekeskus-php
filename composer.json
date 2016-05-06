@@ -22,6 +22,8 @@
         "ext-json": "*"
     },
     "autoload": {
-      "classmap": ["lib/"]
+        "psr-4":{
+            "Maksekeskus\\Lib\\": "lib/"
+        }
     }
 }
