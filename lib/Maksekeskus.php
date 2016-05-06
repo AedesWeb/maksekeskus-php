@@ -1,4 +1,5 @@
 <?php
+namespace Maksekeskus\MaksekeskusPHP;
 
 use Httpful\Http;
 use Httpful\Request;
@@ -161,13 +162,13 @@ class Maksekeskus
      *
      * @param array $request Request data (ie. $_REQUEST)
      * @param bool $as_object Whether to return the message as an object, defaults to FALSE
-     * @throws Exception if unable to extract message data from request
+     * @throws \Exception if unable to extract message data from request
      * @return mixed An object or associative array containing the message data
      */
     public function extractRequestData ($request, $as_object = FALSE)
     {
         if (empty($request['json'])) {
-            throw new Exception("Unable to extract data from request");
+            throw new \Exception("Unable to extract data from request");
         }
 
         return json_decode($request['json'], !$as_object);
@@ -345,7 +346,7 @@ class Maksekeskus
             $expected = $this->composeMac($this->extractRequestData($request));
 
             return ($received == $expected);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return FALSE;
         }
     }
@@ -365,7 +366,7 @@ class Maksekeskus
             $expected = $this->composeSignature($this->extractRequestData($request), $this->extractRequestSignatureType($request));
 
             return ($received == $expected);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return FALSE;
         }
     }
@@ -469,7 +470,7 @@ class Maksekeskus
     /**
      * Get shop data
      *
-     * @throws Exception if failed to get shop data
+     * @throws \Exception if failed to get shop data
      * @return obj Shop object
      */
     public function getShop ()
@@ -479,7 +480,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get shop data. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get shop data. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -487,7 +488,7 @@ class Maksekeskus
      * Get shop config for e-shop integration 
      *
      * @param string $environment json-encoded key-value pairs describing the e-shop environment
-     * @throws Exception if failed to get shop configuration
+     * @throws \Exception if failed to get shop configuration
      * @return obj Shop configuration object
      */
     public function getShopConfig ($environment)
@@ -497,7 +498,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get shop configuration for the environment. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get shop configuration for the environment. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -507,7 +508,7 @@ class Maksekeskus
      * Update shop data
      *
      * @param mixed An object or array containing request body
-     * @throws Exception if failed to update shop data
+     * @throws \Exception if failed to update shop data
      * @return obj Shop object
      */
     public function updateShop ($request_body)
@@ -517,7 +518,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get shop data. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get shop data. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -526,7 +527,7 @@ class Maksekeskus
      * Create new transaction
      *
      * @param mixed An object or array containing request body
-     * @throws Exception if failed to create transaction
+     * @throws \Exception if failed to create transaction
      * @return obj Transaction object
      */
     public function createTransaction ($request_body)
@@ -536,7 +537,7 @@ class Maksekeskus
         if (in_array($response->code, array(200, 201))) {
             return $response->body;
         } else {
-            throw new Exception('Could not create transaction. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not create transaction. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -545,7 +546,7 @@ class Maksekeskus
      * Get transaction details
      *
      * @param string $transaction_id Transaction ID
-     * @throws Exception if failed to get transaction object
+     * @throws \Exception if failed to get transaction object
      * @return obj Transaction object
      */
     public function getTransaction ($transaction_id)
@@ -555,7 +556,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get transaction. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get transaction. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -615,7 +616,7 @@ class Maksekeskus
         $response = $this->makePostRequest('/v1/tokens', $request_body);
 
         if (!in_array($response->code, array(200, 201))) {
-            throw new Exception('Could not create payment token. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not create payment token. Response ('.$response->code.'): '.$response->raw_body);
         }
 
         return $response->body;
@@ -626,7 +627,7 @@ class Maksekeskus
      * Get token by email or cookie ID
     *
     * @param string $request_params Request parameters
-    * @throws Exception if failed to get token object
+    * @throws \Exception if failed to get token object
     * @return obj Token object
     */
     public function getToken ($request_params)
@@ -636,7 +637,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get token. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get token. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -646,7 +647,7 @@ class Maksekeskus
         $response = $this->makePostRequest("/v1/transactions/{$transaction_id}/payments", $request_body);
 
         if (!in_array($response->code, array(200, 201))) {
-            throw new Exception('Could not create payment. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not create payment. Response ('.$response->code.'): '.$response->raw_body);
         }
 
         return $response->body;
@@ -658,7 +659,7 @@ class Maksekeskus
         $response = $this->makePostRequest("/v1/transactions/{$transaction_id}/refunds", $request_body);
 
         if (!in_array($response->code, array(200, 201))) {
-            throw new Exception('Could not create refund. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not create refund. Response ('.$response->code.'): '.$response->raw_body);
         }
 
         return $response->body;
@@ -669,7 +670,7 @@ class Maksekeskus
      * Get refund details
      *
      * @param string $refund_id Refund ID
-     * @throws Exception if failed to get refund object
+     * @throws \Exception if failed to get refund object
      * @return obj Refund object
      */
     public function getRefund ($refund_id)
@@ -679,7 +680,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get refund. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get refund. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -688,7 +689,7 @@ class Maksekeskus
      * Get a list of a transaction's refunds
      *
      * @param string $transaction_id Transaction ID
-     * @throws Exception if failed to get refunds list
+     * @throws \Exception if failed to get refunds list
      * @return array Refund objects
      */
     public function getTransactionRefunds ($transaction_id)
@@ -698,7 +699,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get transaction refunds list. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get transaction refunds list. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -706,7 +707,7 @@ class Maksekeskus
     /**
      * Get a list of refunds
      *
-     * @throws Exception if failed to get refunds list
+     * @throws \Exception if failed to get refunds list
      * @return array Refund objects
      */
     public function getRefunds ()
@@ -716,7 +717,7 @@ class Maksekeskus
         if (in_array($response->code, array(200))) {
             return $response->body;
         } else {
-            throw new Exception('Could not get refunds list. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get refunds list. Response ('.$response->code.'): '.$response->raw_body);
         }
     }
 
@@ -725,7 +726,7 @@ class Maksekeskus
      * Get payment methods
      *
      * @param mixed An object or array containing request parameters
-     * @throws Exception if failed to get payment methods
+     * @throws \Exception if failed to get payment methods
      * @return obj An object containing grouped lists of Payment Method objects
      */
     public function getPaymentMethods ($request_params)
@@ -733,7 +734,7 @@ class Maksekeskus
         $response = $this->makeGetRequest('/v1/methods', $request_params);
 
         if (!in_array($response->code, array(200))) {
-            throw new Exception('Could not get payment methods. Response ('.$response->code.'): '.$response->raw_body);
+            throw new \Exception('Could not get payment methods. Response ('.$response->code.'): '.$response->raw_body);
         }
 
         return $response->body;
